@@ -1,0 +1,142 @@
+{% extends "base.html" %}
+{% block content %}
+{{ scriptCWorld|safe }}
+{{ scriptDWorld|safe }}
+
+<div class="container-xl bg-dark-custom mt-4">
+
+    <div class="bg-dark-custom pt-4 pb-4">
+
+        <div class="row">
+
+            <div class="col-md-4">
+                <h1 align="center" class="custom-display text-custom-red">
+                    {{ "{:,.0f}".format(data[0].TotalDeaths) }}
+                </h1>
+                <h6 align="center" class="custom-font">DEATHS</h6>
+            </div>
+
+            <div class="col-md-4">
+                <h1 align="center" class="custom-display text-custom-blue">
+                    {{ "{:,.0f}".format(data[0].TotalCases) }}
+                </h1>
+                <h6 align="center" class="custom-font">CASES</h6>
+            </div>
+
+            <div class="col-md-4">
+                <h1 align="center" class="custom-display text-custom-yellow">
+                    {% if data[0].TotalRecovered > 0 %}
+                        {{ "{:,.0f}".format(data[0].TotalRecovered) }}
+                    {% endif %}
+                </h1>
+                <h6 align="center" class="custom-font">RECOVERED</h6>
+            </div>
+        </div>
+
+
+        <div class="row mt-5">
+
+            <div class="col-md-4">
+                <h1 align="center" class="custom-display text-custom-red">
+                    {{ "{:,.0f}".format(data[0].TotalDeaths / data[0].TotalCases * 100) }}%
+                </h1>
+                <h6 align="center" class="custom-font">FATALITY RATE</h6>
+            </div>
+
+            <div class="col-md-4">
+                <h1 align="center" class="custom-display text-custom-blue">
+                        {{ "{:,.0f}".format((data[0].TotalCases - data[0].TotalRecovered - data[0].TotalDeaths)/data[0].TotalCases *100) }}%
+                </h1>
+                <h6 align="center" class="custom-font">ACTIVE CASES</h6>
+            </div>
+
+            <div class="col-md-4">
+                <h1 align="center" class="custom-display text-custom-yellow">
+                    {{ "{:,.0f}".format(data[0].TotalRecovered / data[0].TotalCases * 100) }}%
+                </h1>
+                <h6 align="center" class="custom-font">RECOVERY RATE</h6>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+<div class="container-xl mt-5">
+    <div class="row">
+        <div class="col-md-6">
+            {{ divDWorld|safe }}
+            <br>
+        </div>
+        <div class="col-md-6">
+            {{ divCWorld|safe }}
+        </div>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-dark bg-body-dark table-sm custom-text mt-5">
+            <thead class="bg-dark-custom text-center">
+            <tr>
+
+                <th scope="col"></th>
+                <th scope="col"><small>DEATHS</small></th>
+                <th scope="col"><small>TODAY</small></th>
+                <th scope="col"><small>PER 100.000 PEOPLE</small></th>
+                <th scope="col"><small>CASES</small></th>
+                <th scope="col"><small>TODAY</small></th>
+                <th scope="col"><small>PER 100.000 PEOPLE</small></th>
+                <th scope="col"><small>RECOVERED</small></th>
+                <th scope="col"><small>SERIOUS</small></th>
+
+            </tr>
+            </thead>
+            <tbody>
+
+
+            {% for row in data %}
+
+            {%if row.Country == 'World' %}
+            <tr class="text-center">
+
+                <th class="text-left" scope="col">Global</th>
+                <th scope="col">{{ "{:,.0f}".format(row.TotalDeaths) }}</th>
+                <th class="text-custom-red" scope="col">{{ row.NewDeaths }}</th>
+                <th scope="col">{{ row.DeathsPop }}</th>
+                <th scope="col">{{ "{:,.0f}".format(row.TotalCases) }}</th>
+                <th class="text-custom-blue" scope="col">{{ row.NewCases }}</th>
+                <th scope="col">{{ row.CasesPop }}</th>
+                <th scope="col">{{ "{:,.0f}".format(row.TotalRecovered) }}</th>
+                <th scope="col">{{ "{:,.0f}".format(row.Critical) }}</th>
+
+            </tr>
+
+            {% else %}
+            <tr class="text-center">
+
+                {% if row.CountryCode == '0' %}
+                <td class="text-left">{{ row.Country }}</td>
+                {% else %}
+                <td class="text-left"><a href="{{ url_for('country', country_code=row.CountryCode) }}">{{
+                    row.CountryName }}</a></td>
+                {% endif %}
+
+                <td>{% if row.TotalDeaths != 0 %} {{ "{:,.0f}".format(row.TotalDeaths) }} {% endif %}</td>
+                <td class="text-custom-red">{% if row.NewDeaths != 0 %} {{ row.NewDeaths }} {% endif %}</td>
+                <td class="text-muted">{% if row.DeathsPop != 0 %} {{ row.DeathsPop }} {% endif %}</td>
+                <td>{% if row.TotalCases != 0 %} {{ "{:,.0f}".format(row.TotalCases) }} {% endif %}</td>
+                <td class="text-custom-blue">{% if row.NewCases != 0 %} {{ row.NewCases }} {% endif %}</td>
+                <td class="text-muted">{% if row.CasesPop != 0 %} {{ row.CasesPop }} {% endif %}</td>
+                <td>{% if row.TotalRecovered != 0 %} {{ "{:,.0f}".format(row.TotalRecovered) }} {% endif %}</td>
+                <td>{% if row.Critical != 0 %} {{ "{:,.0f}".format(row.Critical) }} {% endif %}</td>
+
+            </tr>
+            {% endif %}
+            {% endfor %}
+            </tbody>
+        </table>
+        <p class="text-right mt-3"><small>Source: <a
+                href="https://www.worldometers.info/coronavirus/">Worldometer</a></small></p>
+    </div>
+</div>
+
+
+{% endblock content %}
