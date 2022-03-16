@@ -6,6 +6,7 @@ The source of the data was:
 - [Worldometer](https://www.worldometers.info/coronavirus/)
 - [European Centre for Disease Prevention and Control](https://opendata.ecdc.europa.eu/covid19/casedistribution/csv)
 
+![Demo](https://media.giphy.com/media/8cPIH5boTpgFgt5cAC/giphy.gif)
 ## Installation
 
 To set up this project on your computer:
